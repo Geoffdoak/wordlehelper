@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'development',
@@ -10,6 +11,17 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+          // Compiles Sass to CSS
+          "sass-loader",
+        ],
       },
     ],
   },
@@ -24,8 +36,13 @@ module.exports = {
     new HtmlWebpackPlugin({
         template: 'src/index.html'
     }),
+    new CopyPlugin({
+      patterns: [
+        {from: path.resolve(__dirname, 'src/icons'), to: path.resolve(__dirname, 'dist')},
+      ],
+    }),
   ],
   devServer: {
-    static: './dist',
+    static: ['./dist','./dist/icons'],
   }
 };

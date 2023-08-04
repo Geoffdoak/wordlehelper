@@ -1,0 +1,279 @@
+$title-height: 50px;
+$letter-spacing: 5px;
+$click-button-height: 40px;
+$keyboard-height: 200px;
+$keyboard-vertical-padding: 20px;
+$key-spacing: 4px;
+$side-margin: 10px;
+$page-max-width: 480px;
+
+$non-gameboard-height: $title-height + $click-button-height + $keyboard-height;
+$gameboard-restrained-width: calc(5 / 6 * (calc(var(--vh, 1vh) * 100) - $non-gameboard-height));
+$gameboard-width: calc(min($page-max-width, 100vw, $gameboard-restrained-width) - 2 * $side-margin);
+
+$character-size: calc($gameboard-width / 5 - $letter-spacing);
+
+$key-height: calc(($keyboard-height - 2 * $keyboard-vertical-padding - 2 * $key-spacing) / 3);
+$key-width: calc((min($page-max-width,100vw) - 2 * $side-margin) / 10 - $key-spacing);
+
+@font-face {
+    font-family: "LililtaOne";
+    src: url("./fonts/LilitaOne-Regular.ttf");
+}
+
+@font-face {
+    font-family: "OpenSans";
+    src: url("./fonts/OpenSans.ttf");
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    background: black;
+}
+
+#content {
+    height: calc(var(--vh, 1vh) * 100);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+
+.title {
+    flex-basis: $title-height;
+    justify-self: flex-start;
+    font-family: "LililtaOne";
+    background-color: black;
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    // background-color: red;
+}
+
+.gamespace {
+    flex-basis: auto;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+}
+
+.game {
+    flex-basis: $gameboard-width;
+    height: calc(6 / 5 * $gameboard-width);
+    // background-color: purple;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.word {
+    display: flex;
+    flex-basis: $character-size;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.letter {
+    flex-basis: $character-size;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(0.6 * $character-size);
+    font-family: "LililtaOne";
+    border-radius: calc(0.1 * $character-size);
+    cursor: pointer;
+}
+
+.possible-words {
+    position: relative;
+    transform: translateY(0px);
+    transition: all 0.3s ease;
+    flex-basis: $click-button-height;
+    height: $click-button-height;
+    max-height: $click-button-height;
+    width: 100%;
+    max-width: $page-max-width;
+    // overflow: hidden;
+    justify-self: flex-end;
+    // background-color: yellow;
+
+    &__click-wrapper{
+        position: relative;
+        height: $click-button-height;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+
+    &__check-button,
+    &__close {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: lightgreen;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "LililtaOne";
+        font-size: 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        cursor: pointer;
+    }
+
+    &__close {
+        display: none;
+    }
+
+    &--show {
+        .possible-words__check-button {
+            display: none;
+        }
+
+        .possible-words__close {
+            display: flex;
+        }
+    }
+
+    &__list{
+        height: calc(var(--vh,1vh) * 100 - $click-button-height);
+        overflow: scroll;
+        background: lightgray;
+        text-transform: uppercase;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        padding: 20px 0;
+    }
+
+    &__word {
+        display: flex;
+
+        span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-basis: 50px;
+            min-width: 50px;
+            height: 50px;
+            font-size: 36px;
+            font-family: 'LililtaOne';
+            background: black;
+            color: white;
+            margin: 2px;
+            margin-bottom: 6px;
+            border-radius: 3px;
+        }
+    }
+}
+
+.virtual-keyboard {
+    position: relative;
+    transform: translateY(0%);
+    transition: all 0.3s ease;
+    z-index: 2;
+    flex-basis: $keyboard-height;
+    height: $keyboard-height;
+    max-height: $keyboard-height;
+    width: 100%;
+    max-width: $page-max-width;
+    overflow: hidden;
+    justify-self: flex-end;
+    background-color: darkgray;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: $keyboard-vertical-padding $side-margin;
+
+    font-family: "OpenSans";
+    font-weight: bolder;
+
+    &--hidden {
+        transform: translateY(100%);
+    }
+
+    &__row {
+        flex-basis: $key-height;
+        height: $key-height;
+        max-height: $key-height;
+        display: flex;
+
+        &--second {
+            padding-left: calc(100% / 20);
+        }
+
+        &--third {
+            padding-left: calc(100% / 11);
+        }
+    }
+
+    &__key {
+        flex-basis: $key-width;
+        max-width: $key-width;
+        width: $key-width;
+        min-width: $key-width;
+        margin-right: $key-spacing;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background-color: gray;
+        // border: solid 1px lightgray;
+        box-shadow: 1px 1px 1px black;
+        border-radius: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+
+        &--backspace {
+            flex-basis: calc(2 * $key-width + $key-spacing);
+            max-width: calc(2 * $key-width + $key-spacing);
+            width: calc(2 * $key-width + $key-spacing);
+            min-width: calc(2 * $key-width + $key-spacing);
+            // margin-left: calc((100% / 11 - $key-spacing) / 1);
+        }
+    }
+}
+
+.letter {
+    color: white;
+    text-transform: uppercase;
+
+    &.active {
+        border: 3px solid lightcoral;
+    }
+    
+    &.blank {
+        background-color: black;
+    }
+
+    &.unused {
+        background-color: gray;
+    }
+
+    &.used {
+        background-color: darkorange;
+    }
+
+    &.correct {
+        background-color: darkgreen;
+    }
+}
